@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>image-detection — upload &amp; moderate (PoC)</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="card">
+      <h1>image-detection</h1>
+      <p class="subtitle">Upload an image or video, then run content moderation on it. Proof of concept.</p>
+
+      <label class="meta" for="token-input">API bearer token</label>
+      <form id="token-form" class="token-row">
+        <input type="password" id="token-input" placeholder="Paste your API_BEARER_TOKEN" autocomplete="off" />
+        <button type="submit" id="token-save-btn">Save</button>
+      </form>
+
+      <form id="upload-form">
+        <input type="file" id="file-input" name="file" accept="image/*,video/*" required />
+        <button type="submit" id="submit-btn">Upload &amp; Moderate</button>
+      </form>
+
+      <div id="status" class="status" hidden></div>
+
+      <section id="preview-section" hidden>
+        <h2>Preview</h2>
+        <img id="preview" alt="Uploaded image preview" hidden />
+        <video id="preview-video" controls hidden></video>
+        <p id="preview-meta" class="meta"></p>
+      </section>
+
+      <section id="result-section" hidden>
+        <h2>Result</h2>
+        <div id="summary"></div>
+        <h2>Raw JSON</h2>
+        <pre id="result-json"></pre>
+      </section>
+
+      <section id="logs-section">
+        <h2>Recent API Calls</h2>
+        <button type="button" id="logs-refresh-btn">Refresh</button>
+        <ul id="logs-list" class="label-list"></ul>
+        <pre id="logs-detail" hidden></pre>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

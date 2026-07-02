@@ -1,0 +1,17 @@
+.git
+.gitignore
+.kiro
+.env
+*.pem
+*.p12
+service-account*.json
+credentials*.json
+credentials*.csv
+/secrets/
+bin/
+dist/
+logs/
+*.md
+install.sh
+docker-compose.yml
+Dockerfile

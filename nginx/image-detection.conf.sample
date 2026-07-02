@@ -1,0 +1,46 @@
+# Sample nginx vhost for the image-detection service.
+#
+# The Go app serves everything itself (static UI from htdocs/ + the
+# /api/* endpoints) on a local port; nginx's job here is just to be the
+# public-facing reverse proxy — TLS termination, a real domain name, and
+# the timeout/body-size tuning that a proxy in front of a slow async API
+# needs.
+#
+# Usage:
+#   1. Copy this file to /etc/nginx/conf.d/ (or sites-available/ + symlink
+#      to sites-enabled/, depending on your distro's nginx layout).
+#   2. Replace `your-domain.example.com` with your real domain.
+#   3. Adjust `proxy_pass` if the app is not on 127.0.0.1:8080 (see
+#      LISTEN_ADDR in your .env).
+#   4. Reload nginx: `sudo nginx -t && sudo systemctl reload nginx`
+#      (or `sudo nginx -s reload`).
+#   5. For production, add a TLS server block (e.g. via certbot) —
+#      this sample is HTTP-only to keep it generic.
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name your-domain.example.com;
+
+    add_header X-Robots-Tag "noindex, nofollow" always;
+
+    # The upload endpoint accepts video files up to 200MB (Alibaba Cloud's
+    # async video moderation limit); images are capped much lower by the
+    # app itself, but nginx must allow the larger of the two here.
+    client_max_body_size 200m;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Video moderation is asynchronous (submit + poll) and can take
+        # several minutes; extend proxy timeouts so nginx doesn't cut the
+        # connection while the app is waiting on Alibaba Cloud.
+        proxy_read_timeout 6m;
+        proxy_send_timeout 6m;
+    }
+}

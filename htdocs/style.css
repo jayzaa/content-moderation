@@ -1,0 +1,173 @@
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #0f1115;
+  color: #e6e6e6;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 36rem;
+  padding: 2rem;
+  background: #161922;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+
+h2 {
+  font-size: 1rem;
+  color: #9aa4b2;
+  margin: 1.5rem 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  color: #9aa4b2;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+form {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+input[type="file"] {
+  flex: 1;
+  min-width: 0;
+  color: #e6e6e6;
+}
+
+button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;
+}
+
+button:disabled {
+  background: #374151;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 1rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.status.info {
+  background: #1e3a5f;
+  color: #93c5fd;
+}
+
+.status.error {
+  background: #4c1d1d;
+  color: #fca5a5;
+}
+
+.status.success {
+  background: #1d3b2a;
+  color: #86efac;
+}
+
+img#preview {
+  max-width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+video#preview-video {
+  max-width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.meta {
+  color: #9aa4b2;
+  font-size: 0.85rem;
+  margin: 0.4rem 0 0;
+}
+
+pre#result-json {
+  background: #0d0f14;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+ul.label-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.9rem;
+  color: #e6e6e6;
+}
+
+ul.label-list li {
+  margin-bottom: 0.25rem;
+}
+
+.token-row {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.4rem 0 1.25rem;
+}
+
+.token-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #2a2f3a;
+  background: #0d0f14;
+  color: #e6e6e6;
+}
+
+#logs-section {
+  margin-top: 2rem;
+  border-top: 1px solid #2a2f3a;
+  padding-top: 1.25rem;
+}
+
+#logs-list li {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+}
+
+#logs-list li:hover {
+  text-decoration-color: #9aa4b2;
+}
+
+#logs-detail {
+  background: #0d0f14;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
