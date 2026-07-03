@@ -33,7 +33,13 @@
     return token ? { Authorization: "Bearer " + token } : {};
   }
 
-  tokenInput.value = getToken();
+  // Pre-fill the token field with "test" (the default backend value) if
+  // the user has not saved a token yet. If the backend API_BEARER_TOKEN
+  // has been changed, replace this value with the one from the backend.
+  tokenInput.value = getToken() || "test";
+  if (!sessionStorage.getItem(TOKEN_STORAGE_KEY)) {
+    sessionStorage.setItem(TOKEN_STORAGE_KEY, "test");
+  }
   tokenForm.addEventListener("submit", (event) => {
     event.preventDefault();
     sessionStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value.trim());
