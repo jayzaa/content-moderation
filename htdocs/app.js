@@ -16,10 +16,6 @@
   const summaryEl = document.getElementById("summary");
   const resultJson = document.getElementById("result-json");
 
-  const logsList = document.getElementById("logs-list");
-  const logsDetail = document.getElementById("logs-detail");
-  const logsRefreshBtn = document.getElementById("logs-refresh-btn");
-
   // --- Token handling -------------------------------------------------
   // The bearer token is kept only in sessionStorage (cleared when the tab
   // closes) and is never written into this file or any served asset.
@@ -44,7 +40,6 @@
     event.preventDefault();
     sessionStorage.setItem(TOKEN_STORAGE_KEY, tokenInput.value.trim());
     setStatus("success", "Token saved for this browser tab.");
-    refreshLogs();
   });
 
   // --- Status helpers ---------------------------------------------------
@@ -173,59 +168,10 @@
       resultJson.textContent = JSON.stringify(result.raw, null, 2);
       resultSection.hidden = false;
       setStatus("success", "Done. Temporary file has been deleted from storage.");
-      refreshLogs();
     } catch (err) {
       setStatus("error", err.message || String(err));
     } finally {
       submitBtn.disabled = false;
     }
   });
-
-  // --- Logs viewer ---------------------------------------------------
-
-  async function refreshLogs() {
-    logsList.innerHTML = "";
-    logsDetail.hidden = true;
-    if (!getToken()) return;
-
-    try {
-      const res = await fetch("/api/logs", { headers: authHeaders() });
-      if (!res.ok) throw new Error(`failed to load logs (${res.status})`);
-      const records = await res.json();
-
-      if (!records || records.length === 0) {
-        const li = document.createElement("li");
-        li.textContent = "No calls logged yet.";
-        logsList.appendChild(li);
-        return;
-      }
-
-      for (const rec of records) {
-        const li = document.createElement("li");
-        const when = new Date(rec.timestamp).toLocaleString();
-        li.textContent = `[${rec.status}] ${rec.kind} — ${rec.filename || "?"} — ${when}`;
-        li.addEventListener("click", () => showLogDetail(rec.file));
-        logsList.appendChild(li);
-      }
-    } catch (err) {
-      const li = document.createElement("li");
-      li.textContent = "Error loading logs: " + (err.message || err);
-      logsList.appendChild(li);
-    }
-  }
-
-  async function showLogDetail(file) {
-    try {
-      const res = await fetch("/api/logs/" + encodeURIComponent(file), { headers: authHeaders() });
-      const data = await res.json();
-      logsDetail.textContent = JSON.stringify(data, null, 2);
-      logsDetail.hidden = false;
-    } catch (err) {
-      logsDetail.textContent = "Error: " + (err.message || err);
-      logsDetail.hidden = false;
-    }
-  }
-
-  logsRefreshBtn.addEventListener("click", refreshLogs);
-  refreshLogs();
 })();

@@ -1,3 +1,11 @@
+/* The HTML `hidden` attribute must always win over any `display` rule below
+   (e.g. img#preview / video#preview-video use display:block). Without this,
+   an empty <video controls> element stays visible as a "standby" player even
+   when JS has marked it hidden — which looks messy next to an image preview. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   font-family: system-ui, -apple-system, sans-serif;
   background: #0f1115;
@@ -90,14 +98,20 @@ button:disabled {
   color: #86efac;
 }
 
+/* Image preview is kept small (25% of the container) so it stays a
+   compact thumbnail. */
 img#preview {
-  max-width: 100%;
+  max-width: 25%;
+  height: auto;
   border-radius: 8px;
   display: block;
 }
 
+/* Video preview is allowed to be wider for comfortable viewing. */
 video#preview-video {
   max-width: 100%;
+  width: 100%;
+  height: auto;
   border-radius: 8px;
   display: block;
 }
@@ -145,29 +159,4 @@ ul.label-list li {
   color: #e6e6e6;
 }
 
-#logs-section {
-  margin-top: 2rem;
-  border-top: 1px solid #2a2f3a;
-  padding-top: 1.25rem;
-}
 
-#logs-list li {
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-}
-
-#logs-list li:hover {
-  text-decoration-color: #9aa4b2;
-}
-
-#logs-detail {
-  background: #0d0f14;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-top: 0.75rem;
-  overflow-x: auto;
-  font-size: 0.85rem;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
