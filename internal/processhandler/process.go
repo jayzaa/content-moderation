@@ -213,7 +213,19 @@ func (h *Handler) handleVideo(w http.ResponseWriter, r *http.Request, data []byt
 		writeError(w, http.StatusInternalServerError, "failed to store file temporarily")
 		return
 	}
-	defer h.cleanup(objectName)
+	// Always clean up the GCS object using a fresh background context so
+	// that cleanup is never skipped even if the request context is cancelled
+	// or the poll timeout fires. This is the fix for video files lingering
+	// in the bucket after async moderation completes or errors out.
+	defer func() {
+		cleanCtx, cleanCancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cleanCancel()
+		if err := h.GCS.Delete(cleanCtx, objectName); err != nil {
+			log.Printf("processhandler: video gcs cleanup %s: %v", objectName, err)
+		} else {
+			log.Printf("processhandler: video gcs cleanup %s: deleted", objectName)
+		}
+	}()
 
 	taskID, err := moderation.SubmitVideoURL(h.ModClient, signedURL)
 	if err != nil {

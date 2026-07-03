@@ -99,10 +99,16 @@ func main() {
 		_, _ = w.Write([]byte("ok"))
 	})
 
-	// All /api/* endpoints require the bearer token.
+	// All /api/* endpoints require the bearer token, except /api/logs which
+	// is read-only and powers the public dashboard at /logs.
 	mux.Handle("/api/process", auth.BearerMiddleware(cfg.APIBearerToken, http.HandlerFunc(process.ServeHTTP)))
-	mux.Handle("/api/logs", auth.BearerMiddleware(cfg.APIBearerToken, logsHandler))
-	mux.Handle("/api/logs/", auth.BearerMiddleware(cfg.APIBearerToken, logsHandler))
+	mux.Handle("/api/logs", logsHandler)
+	mux.Handle("/api/logs/", logsHandler)
+
+	// Serve the log dashboard at /logs (maps to htdocs/logs.html).
+	mux.HandleFunc("/logs", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filepath.Join(htdocsDir, "logs.html"))
+	})
 
 	// Serve the PoC UI (index.html, css, js) from htdocs/, at the site root.
 	mux.Handle("/", http.FileServer(http.Dir(htdocsDir)))
