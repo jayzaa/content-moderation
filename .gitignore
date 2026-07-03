@@ -17,6 +17,7 @@ service-account*.json
 credentials*.json
 credentials*.csv
 /secrets/
+/credentials/
 
 # Runtime-generated data — not part of the source tree
 /logs/
