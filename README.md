@@ -9,6 +9,12 @@ returns both the raw API response and a human-readable summary.
 This is a proof of concept — see [Security notes](#security-notes) before
 using it for anything beyond local testing/demoing.
 
+> ⚠️ **IMPORTANT — Bearer Token**
+> The default `API_BEARER_TOKEN` in `.env` is set to `test` for local development convenience.
+> **You must change this to a strong, randomly generated value before deploying to any shared, staging, or production environment.**
+> To generate a secure token: `openssl rand -hex 32`
+> Anyone with this token has full access to the API.
+
 ## Table of contents
 
 - [Stack](#stack)
