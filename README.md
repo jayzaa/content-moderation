@@ -472,3 +472,7 @@ testing:
 - **The frontend stores the bearer token in the browser's
   `sessionStorage`**, cleared when the tab closes. It is never written
   to disk or embedded in any served file.
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
