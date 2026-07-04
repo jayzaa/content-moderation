@@ -151,7 +151,7 @@ See `.env.example` for the full list with explanations. Summary:
 | `API_BEARER_TOKEN` | yes | single token required on all `/api/*` requests |
 | `GCP_PROJECT_ID` | yes | GCP project owning the GCS bucket |
 | `GCS_BUCKET` | yes | GCS bucket for temporary uploads |
-| `GCS_CREDENTIALS_FILE` | yes | path to a GCP service account JSON key |
+| `GCS_CREDENTIALS_FILE` | yes | path to a GCP service account JSON key file |
 | `SIGNED_URL_EXPIRY_MINUTES` | no (default `10`) | how long signed URLs stay valid |
 | `ALIBABA_CLOUD_ACCESS_KEY_ID` | yes | Alibaba Cloud RAM user AccessKey ID |
 | `ALIBABA_CLOUD_ACCESS_KEY_SECRET` | yes | Alibaba Cloud RAM user AccessKey secret |
@@ -161,6 +161,30 @@ See `.env.example` for the full list with explanations. Summary:
 The app loads `.env` automatically at startup if present. Real
 environment variables (e.g. set by systemd, a container runtime, or your
 shell) always take precedence over `.env` file values.
+
+### Credential files
+
+**Never commit credential files to version control.** The repository's
+`.gitignore` already excludes `credentials/`, `secrets/`, `.env`, and
+other sensitive paths.
+
+- **GCP service account key** (`GCS_CREDENTIALS_FILE`): Save the JSON key
+  file outside the project directory (e.g. `/home/youruser/media-detection.json`
+  or `/etc/credentials/gcs-key.json`). Point `GCS_CREDENTIALS_FILE` in
+  `.env` to that location. Keep file permissions restrictive
+  (`chmod 600`).
+- **Alibaba Cloud AccessKey pair** (`ALIBABA_CLOUD_ACCESS_KEY_ID`,
+  `ALIBABA_CLOUD_ACCESS_KEY_SECRET`): Store in `.env` on the server only.
+  Never hard-code them in source or commit `.env`. Use file permissions
+  (`chmod 600 .env`) and gitignore to protect the file.
+- **Bearer token** (`API_BEARER_TOKEN`): Generate with `openssl rand -hex 32`
+  and store only in `.env` on the server. The same file contains the
+  Alibaba credentials, so treat it with the same care.
+
+If you use Docker, the compose setup expects the GCP key at
+`./secrets/gcs-service-account.json` (bind-mounted read-only into the
+container at `/run/secrets/gcs-service-account.json`). See the Docker
+section below for details.
 
 **Required external resources** (not provisioned by this repo):
 
